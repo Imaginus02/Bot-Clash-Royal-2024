@@ -25,6 +25,7 @@ import numpy as np
 import pygetwindow as gw
 import mss
 import mss.tools
+from use_fonction.configuration.fenetre_def import hauteur_capture,adjusting_x_capture,adjusting_y_capture,adjusting_width_capture,adjusting_height_capture
 
 class Screen_video_capture:
     """
@@ -48,7 +49,7 @@ class Screen_video_capture:
             None
         """
         self.window = None
-        self.hauteur_desirer_capture = 800
+        self.hauteur_desirer_capture = hauteur_capture
         self.type_emul = None
         self.facteur_echelle = None
         self.configure_windows()
@@ -102,10 +103,10 @@ class Screen_video_capture:
             x, y, width, height = self.window.left, self.window.top, self.window.width, self.window.height
 
             # Ajuster les coordonnées pour exclure la barre de titre et les bords
-            adjusted_x = x + 10  # Ajustez si nécessaire
-            adjusted_y = y + 30  # Ajustez pour ignorer la barre de titre
-            adjusted_width = width - 20  # Ajustez si nécessaire
-            adjusted_height = height - 40  # Ajustez si nécessaire
+            adjusted_x = x + adjusting_x_capture  # Ajustez si nécessaire
+            adjusted_y = y + adjusting_y_capture  # Ajustez pour ignorer la barre de titre
+            adjusted_width = width - adjusting_width_capture - adjusting_x_capture  # Ajustez si nécessaire
+            adjusted_height = height - adjusting_y_capture - adjusting_height_capture  # Ajustez si nécessaire
 
             monitor = {"top": adjusted_y, "left": adjusted_x, "width": adjusted_width, "height": adjusted_height}
 
