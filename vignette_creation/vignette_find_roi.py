@@ -19,11 +19,6 @@ from matplotlib import pyplot as plt
 image_cible = cv2.imread('11.png')
 image_modele = cv2.imread('tower.jpg')  # La ROI/vignette
 
-x=78
-y=456
-w=54
-h=65
-
 image_cible=image_cible[:, :]
 
 # Correspondance de modèles
