@@ -17,6 +17,7 @@ Dépendances:
     - nécessite la création d'un yolo avec le code train_yolo.py et d'une base de donnée
     - open CV (cv2)
     - os
+    - use_fonction.configuration.p2p (initialisation de variable)
 """
 
 import torch
