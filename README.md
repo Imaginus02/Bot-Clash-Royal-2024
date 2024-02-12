@@ -1,6 +1,11 @@
 # Bot-Clash-Royal
-A framework for creation of a bot for clash royal
+Ce projet a pour but de poser une base pour permettre le développement d'un bot pour le jeu clash royal.
 
-## Authors
+## Fonctionnement
+Le programme fonctionne avec différents objets discutant entre eux selon le graphique suivant:
+[Screenshot](screenshot.png)
+
+
+## Auteur
 
 * **Étienne-Thédore PRIN** - [Website](https://prin.dev/)
