@@ -3,7 +3,7 @@ Ce projet a pour but de poser une base pour permettre le développement d'un bot
 
 ## Fonctionnement
 Le programme fonctionne avec différents objets discutant entre eux selon le graphique suivant:
-[Screenshot](screenshot.png)
+[graphique](Graphe_fonctionnement.png)
 
 
 ## Auteur
