@@ -26,9 +26,9 @@ L'utilisation de scrcpy demande une étape d'initialisation sur le téléphone p
 
 Pour faire tourner ce programme il faut avoir installer les dépendances suivantes:
 
-'''
+```
 pip install numpy
-'''
+```
 
 ## Auteur
 
