@@ -18,9 +18,17 @@ Controller : Effectue l'action demandé en cliquant aux endroits désiré sur le
 Pour récupérer la fenêtre de jeu sur ordinateur on passe par un émulateur pour Windows et Mac.
 
 Pour Linux, il faut brancher le smartphone à l'ordinateur pour utiliser scrcpy.
-[Website-Scrcpy](https://github.com/Genymobile/scrcpy/)
-L'utilisation de scrcpy demande une étape d'initialisation sur le téléphone puisque qu'il faut activer le débogage USB
-[Activation débogage usb](https://developer.android.com/studio/debug/dev-options?hl=fr#enable)
+[(Website-Scrcpy)](https://github.com/Genymobile/scrcpy/)
+L'utilisation de scrcpy demande une étape d'initialisation sur le téléphone puisque qu'il faut activer le débogage USB.
+[(Tuto activation débogage usb)](https://developer.android.com/studio/debug/dev-options?hl=fr#enable)
+
+## Dépendances
+
+Pour faire tourner ce programme il faut avoir installer les dépendances suivantes:
+
+'''
+pip install numpy
+'''
 
 ## Auteur
 
