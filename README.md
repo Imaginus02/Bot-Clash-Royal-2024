@@ -24,11 +24,24 @@ L'utilisation de scrcpy demande une étape d'initialisation sur le téléphone p
 
 ## Dépendances
 
-Pour faire tourner ce programme il faut avoir installer les dépendances suivantes:
+Pour faire tourner ce programme il faut avoir installer les dépendances suivantes :
 
 ```
-pip install numpy
+pip install sys pynput time cv2 numpy math pygame os ultralytics matplotlib
 ```
+Il faut aussi installer PyTorch à l'aide de la ligne de commande trouvable [sur ce site en indiquant sa configuration](https://pytorch.org/get-started/locally/)
+
+
+pour Linux il faut rajouter les commandes suivantes :
+```
+pip install scrcpy-client
+sudo apt install adb
+```
+pour windows et mac:
+```
+pip install pygetwindow mss
+```
+
 
 ## Auteur
 
