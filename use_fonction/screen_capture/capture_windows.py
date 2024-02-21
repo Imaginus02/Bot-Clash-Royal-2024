@@ -82,7 +82,7 @@ class Screen_video_capture:
             selected_window = all_windows[choice]
             print(f"Vous avez sélectionné : {selected_window.title}")
             self.window = gw.getWindowsWithTitle(selected_window.title)[0]
-            self.window.activate()
+            # self.window.activate()
         except ValueError:
             print("Veuillez entrer un nombre entier.")
         except IndexError:
