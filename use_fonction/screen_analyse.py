@@ -53,7 +53,7 @@ class Screen_analyse:
             None
         """
         self.AI_in_game = VGG10(num_classes=2)
-        self.AI_in_game.load_state_dict(torch.load(chemin_vgg10))
+        self.AI_in_game.load_state_dict(torch.load(chemin_vgg10, map_location=torch.device('cpu')))
         self.AI_in_game.eval()
         self.AI_process_in_game = transforms.Compose([
                     transforms.ToPILImage(),

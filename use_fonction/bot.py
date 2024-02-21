@@ -135,5 +135,6 @@ class bot():
         list_card=[]
         for i in state[6:10]:
             print(i[2])
-            list_card.append(self.dict_trad[self.card_dictionnary[i[2]]])
+            if i[2]!=0:
+                list_card.append(self.dict_trad[self.card_dictionnary[i[2]]])
         return list_card
