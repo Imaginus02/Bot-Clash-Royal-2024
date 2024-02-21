@@ -18,8 +18,9 @@ Variables:
     chemin_dossier_tours : le chemin menant au dossier contenant les images des tours rouges et bleu en vie 
 """
 
-chemin_vgg10='ai_creation/ia_ingame/vgg10_model_light.pth'
 chemin_use_fonction = 'F:/projet indus/use_fonction/'
+
+chemin_vgg10='ai_creation/ia_ingame/vgg10_model_light.pth'
 chemin_yolo=chemin_use_fonction+"v2.pt"
 classes_yolo=['archere_blue', 
               'archere_red', 
