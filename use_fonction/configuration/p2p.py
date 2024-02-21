@@ -19,7 +19,8 @@ Variables:
 """
 
 chemin_vgg10='ai_creation/ia_ingame/vgg10_model_light.pth'
-chemin_yolo="F:/projet indus/use_fonction/v2.pt"
+chemin_use_fonction = 'F:/projet indus/use_fonction/'
+chemin_yolo=chemin_use_fonction+"v2.pt"
 classes_yolo=['archere_blue', 
               'archere_red', 
               'chevalier_blue', 
@@ -41,10 +42,10 @@ ROI_cartes=[[106,673,63,80],
             [190,673,63,80],
             [275,673,63,80],
             [359,673,63,80]]
-chemin_dossier_vignettes='F:/projet indus/use_fonction/vignettes'
+chemin_dossier_vignettes=chemin_use_fonction+"vignettes"
 ROI_elixir=[119,785,311,1]
 ROI_tower=[[315,125,52,70],
            [80,125,52,70],
            [78,456,54,65],
            [313,456,54,65]]
-chemin_dossier_tours='F:/projet indus/use_fonction/towers'
+chemin_dossier_tours=chemin_use_fonction+"towers"
