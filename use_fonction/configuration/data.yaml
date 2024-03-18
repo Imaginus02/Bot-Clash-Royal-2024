@@ -1,0 +1,13 @@
+train: F:/projet indus/clash_labelled/train/images
+val: F:/projet indus/clash_labelled/valid/images
+test: F:/projet indus/clash_labelled/test/images
+
+nc: 10
+names: ['archer', 'boulefeu', 'chevalier', 'clock', 'fleches', 'gargouille', 'geant', 'info-message', 'miniPK', 'mousquetaire','archer', 'boulefeu', 'chevalier', 'clock', 'fleches', 'gargouille', 'geant', 'info-message', 'miniPK', 'mousquetaire']
+
+roboflow:
+  workspace: school-djpyf
+  project: clashroyal
+  version: 1
+  license: CC BY 4.0
+  url: https://universe.roboflow.com/school-djpyf/clashroyal/dataset/1

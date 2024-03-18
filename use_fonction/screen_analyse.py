@@ -154,7 +154,8 @@ class Screen_analyse:
                 chemin_image = os.path.join(self.dossier_vignettes, fichier)
                 image = cv2.imread(chemin_image)
                 if image is not None:
-                    resultat = cv2.matchTemplate(image, roi, cv2.TM_CCOEFF_NORMED)
+                    resized = cv2.resize(image, (w, h), interpolation=cv2.INTER_AREA)
+                    resultat = cv2.matchTemplate(resized, roi, cv2.TM_CCOEFF_NORMED)
                     _, max_val, _, _ = cv2.minMaxLoc(resultat)
                     # Définir un seuil de correspondance
                     seuil = 0.15
@@ -200,7 +201,8 @@ class Screen_analyse:
                     chemin_image = os.path.join(self.dossier_image_tower, fichier)
                     image = cv2.imread(chemin_image)
                     if image is not None:
-                        resultat = cv2.matchTemplate(image, roi, cv2.TM_CCOEFF_NORMED)
+                        resized = cv2.resize(image, (w, h), interpolation=cv2.INTER_AREA)
+                        resultat = cv2.matchTemplate(resized, roi, cv2.TM_CCOEFF_NORMED)
                         _, max_val, _, _ = cv2.minMaxLoc(resultat)
                         # Définir un seuil de correspondance
                         seuil = 0.25

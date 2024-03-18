@@ -26,5 +26,6 @@ def controller_initialisation(windows_capture):
     elif sys.platform == "win32":
         # Importations spécifiques à Windows
         from use_fonction.controller.dev_to_game_click import controller
+        # from use_fonction.controller.dev_to_game_click_linux import controller
     controller_v = controller(windows_capture)
     return controller_v

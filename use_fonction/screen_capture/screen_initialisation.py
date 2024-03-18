@@ -26,5 +26,6 @@ def screen_initialisation():
     elif sys.platform == "win32":
         # Importations spécifiques à Windows
         from use_fonction.screen_capture.capture_windows import Screen_video_capture
+        # from use_fonction.screen_capture.capture_linux import Screen_video_capture
     windows_capture = Screen_video_capture()
     return windows_capture

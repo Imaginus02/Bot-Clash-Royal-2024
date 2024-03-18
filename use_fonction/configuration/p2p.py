@@ -18,35 +18,28 @@ Variables:
     chemin_dossier_tours : le chemin menant au dossier contenant les images des tours rouges et bleu en vie 
 """
 
+import json
+import yaml
+
 chemin_use_fonction = 'F:/projet indus/use_fonction/'
 
 chemin_vgg10='ai_creation/ia_ingame/vgg10_model_light.pth'
 chemin_yolo=chemin_use_fonction+"v2.pt"
-classes_yolo=['archere_blue', 
-              'archere_red', 
-              'chevalier_blue', 
-              'chevalier_red', 
-              'fire_ball', 
-              'fleches', 
-              'gargouille_blue', 
-              'gargouille_red', 
-              'geant_blue', 
-              'geant_red', 
-              'horloge_blue', 
-              'horloge_red', 
-              'mousquetaire_blue', 
-              'mousquetaire_red', 
-              'msg', 
-              'pk_blue', 
-              'pk_red']
-ROI_cartes=[[106,673,63,80],
-            [190,673,63,80],
-            [275,673,63,80],
-            [359,673,63,80]]
+
+fichier_yaml = 'F:/projet indus final/Bot-Clash-Royal/use_fonction/configuration/data.yaml'
+with open(fichier_yaml, 'r') as fichier:
+    labels = yaml.safe_load(fichier)
+
+classes_yolo=labels["names"]
+# print(classes_yolo)
+
+# Chemin vers votre fichier JSON
+fichier_json = 'F:/projet indus final/Bot-Clash-Royal/use_fonction/configuration/roi_data.json'
+with open(fichier_json, 'r') as fichier:
+    roi_info = json.load(fichier)
+
+ROI_cartes=roi_info["ROI_cartes"]
 chemin_dossier_vignettes=chemin_use_fonction+"vignettes"
-ROI_elixir=[119,785,311,1]
-ROI_tower=[[315,125,52,70],
-           [80,125,52,70],
-           [78,456,54,65],
-           [313,456,54,65]]
+ROI_elixir=roi_info["ROI_elixir"]
+ROI_tower=roi_info["ROI_tower"]
 chemin_dossier_tours=chemin_use_fonction+"towers"
