@@ -95,7 +95,7 @@ class Screen_UI:
         if state[0]==True:
             text_state_1 = self.font_state.render("Game : True", True, (255, 255, 255))
             self.window.blit(text_state_1, (self.x + 35, 30 + i*25))
-            analyze_teams = 0
+            analyze_teams = 1
             if analyze_teams:
                 _, _, _, entities = parse_state(state)
                 teams = categorize_teams(entities, image)
