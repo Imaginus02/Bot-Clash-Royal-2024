@@ -15,17 +15,17 @@ Dépendances:
 import cv2
 from matplotlib import pyplot as plt
 
-image_path = '11.png'
-new_image_name= 'tower.jpg'
+image_path = 'D:\\clash royale\\Bot-Clash-Royal-2023\\image_non_labelise\\23.png'
+new_image_name= 'gobelin_vignette.jpg'
 
 image = cv2.imread(image_path)
 
 if image is not None:
 
-    x=78
-    y=456
-    w=54
-    h=65
+    x=140
+    y=23
+    w=73
+    h=92
 
     roi = image[y:y+h, x:x+w]
 
