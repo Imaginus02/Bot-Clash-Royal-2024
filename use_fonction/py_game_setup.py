@@ -14,6 +14,7 @@ Dépendances:
 """
 
 import pygame
+from use_fonction.bot import categorize_teams, parse_state 
 
 class Screen_UI:
     """
@@ -75,10 +76,10 @@ class Screen_UI:
         self.window.blit(text_y, (0, self.y))
         self.window.blit(text_indice_bas_hors_game, (0, indice_bas_hors_game+30))
         self.window.blit(text_pos, (200, 0))
-        self.update_visible_state(state)
+        self.update_visible_state(state, img)
         pygame.display.flip()
 
-    def update_visible_state(self,state):
+    def update_visible_state(self,state, image):
         """
         Met à jour l'état de l'image indiqué par l'UI
 
@@ -94,15 +95,28 @@ class Screen_UI:
         if state[0]==True:
             text_state_1 = self.font_state.render("Game : True", True, (255, 255, 255))
             self.window.blit(text_state_1, (self.x + 35, 30 + i*25))
+            analyze_teams = 0
+            if analyze_teams:
+                _, _, _, entities = parse_state(state)
+                teams = categorize_teams(entities, image)
             for part_state in state[1:]:
                 i+=1
                 if part_state[0] == 1:
+                    if part_state in entities and analyze_teams:
+                        if teams[entities.index(part_state)][1] == "none":
+                            color = self.white
+                        elif teams[entities.index(part_state)][1] == "enemy":
+                            color = (255, 0, 0)
+                        elif teams[entities.index(part_state)][1] == "friendly":
+                            color = (0, 0, 255)
+                    else:
+                        color = self.white
                     # Créer une surface avec canal alpha
                     x_l = part_state[3][0]
                     y_l = part_state[3][1]
                     x = 30 + part_state[1][0] - int(x_l/2)
                     y = 30 + part_state[1][1] - int(y_l/2)
-                    pygame.draw.rect(self.window, self.white, (x, y, x_l, y_l), 2)
+                    pygame.draw.rect(self.window, color, (x, y, x_l, y_l), 2)
                     
                 text_part_state = self.font_state.render(str(part_state[1])+"  "+str(part_state[2]), True, (255, 255, 255))
                 self.window.blit(text_part_state, (self.x + 35, 30 + i*25))

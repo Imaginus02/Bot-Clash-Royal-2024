@@ -149,7 +149,7 @@ class Screen_analyse:
             x,y,w,h=self.cartes_roi[i]
             roi = img[y:y+h, x:x+w]
             # print(i)
-            cv2.imwrite("test_"+str(i)+".jpg",roi)
+            #cv2.imwrite("test_"+str(i)+".jpg",roi)
             max_seuil=0
             # Parcourir les images du dossier
             for fichier in os.listdir(self.dossier_vignettes):

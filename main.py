@@ -48,7 +48,7 @@ while running:
     image = windows_capture.get_screen()
     state = analyse.get_state(image)
     # print(state)
-    action = bot_ia.get_action(state)
+    action = bot_ia.get_action(state, image)
 
     if action!=[]:
         print(action)
