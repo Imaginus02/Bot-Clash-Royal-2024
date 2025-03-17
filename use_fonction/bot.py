@@ -24,8 +24,8 @@ import cv2
 
 
 prix_cartes = {
-    "armee_squelette_vignette.jpg":3,
-    "gobelin_a_lance_vignette.jpg":3,
+    "squelette_vignette.jpg":3,
+    "gobelin_vignette.jpg":2,
     "archere_vignette.jpg":3,
     "chevalier_vignette.jpg":3,
     "geant_vignette.jpg":5,
@@ -215,25 +215,29 @@ class bot():
         our_towers = [tower for tower in towers if tower[1][1] > 400] # Assume towers under y=400 are ours
         enemy_towers = [tower for tower in towers if tower[1][1] < 400] # Assume towers above y=400 are enemies
         
-        print ("our_towers",our_towers)
-        print ("enemy_towers",enemy_towers)
+        #print("our_towers",our_towers)
+        #print("enemy_towers",enemy_towers)
         # Bot logic
         action = self.decide_action(elixir, our_towers, enemy_towers, cards, friendly_entities, enemy_entities)
         return action
+
     def decide_action(self, elixir, our_towers, enemy_towers, cards, friendly_entities, enemy_entities):
         # Reset attack queue if needed
-        if self.compteur % 300 == 0:  # Every ~10 seconds
+        if self.compteur % 600 == 0:  # Every ~10 seconds
             self.attack_queue = []
         
         # Check if we need to defend
-        if self.should_defend(enemy_entities, our_towers):
+        if self.should_defend(enemy_entities, our_towers) and not self.defense_mode:
+            print("defense")
             self.defense_mode = True
-            self.defense_timer = self.compteur + 150  # Stay in defense mode for ~5 seconds
+            self.defense_timer = self.compteur + 15  # Stay in defense mode for ~2.5 seconds
             self.last_defense_time = self.compteur
         
         # Check if we can exit defense mode
-        if self.defense_mode and self.compteur > self.defense_timer:
+        if self.defense_mode and self.compteur >= self.defense_timer:
             self.defense_mode = False
+        else:
+            print("Remaining in defense mode for {} frames".format(self.defense_timer - self.compteur))
         
         # If we're in defense mode, prioritize defense
         if self.defense_mode:
@@ -243,12 +247,13 @@ class bot():
         
         # If we have enough elixir and not in immediate danger, check for attack opportunities
         if elixir >= self.elixir_threshold and not self.defense_mode:
+            print("attack")
             # If we have attack queued, execute the next one
             if self.attack_queue:
                 next_attack = self.attack_queue.pop(0)
                 card_index, position = next_attack
                 # Verify the card is available
-                if card_index < len(cards) and elixir >= 4:  # Ensure we have enough elixir
+                if card_index < len(cards) and elixir >= prix_cartes[cards[card_index][2]]:  # Ensure we have enough elixir
                     self.last_card_played = cards[card_index][1]
                     return [card_index, position]
             
@@ -329,7 +334,7 @@ class bot():
     
     def choose_defender(self, cards, enemy_type):
         # Map cards to indices
-        card_indices = {cards[i][1]: i for i in range(len(cards))}
+        card_indices = {cards[i][2]: i for i in range(len(cards))}
         
         # Prioritize defenders based on enemy type
         defenders_priority = []
@@ -350,7 +355,7 @@ class bot():
         # Find the first available defender from our priority list
         for defender in defenders_priority:
             if defender in card_indices:
-                return card_indices[defender]
+                return card_indices[defender+ "_vignette.jpg"]
         
         # If none of our preferred defenders are available, use any card
         for i in range(len(cards)):
@@ -378,7 +383,7 @@ class bot():
     
     def execute_push_attack(self, cards, enemy_towers):
         """Strong push with tank + support troops"""
-        card_types = [card[1] for card in cards]
+        card_types = [card[2] for card in cards]
         
         # Queue up a strong push
         target_tower = enemy_towers[0]  # Target the first enemy tower
@@ -390,12 +395,12 @@ class bot():
         
         # Check for tank cards
         if "geant" in card_types:
-            tank_index = card_types.index("geant")
+            tank_index = card_types.index("geant_vignette.jpg")
             self.attack_queue.append([tank_index, [attack_x, attack_y]])
             
             # Queue support troops
             if "archere" in card_types:
-                support_index = card_types.index("archere")
+                support_index = card_types.index("archere_vignette.jpg")
                 support_x = attack_x + 30
                 support_y = attack_y + 30
                 self.attack_queue.append([support_index, [support_x, support_y]])
@@ -404,13 +409,13 @@ class bot():
             return self.attack_queue.pop(0)
             
         # If no tank, try a mini-tank
-        elif "chevalier" in card_types:
-            tank_index = card_types.index("chevalier")
+        elif "chevalier_vignette.jpg" in card_types:
+            tank_index = card_types.index("chevalier_vignette.jpg")
             self.attack_queue.append([tank_index, [attack_x, attack_y]])
             
             # Queue support troops
-            if "gobelin" in card_types or "squelette" in card_types:
-                support_index = card_types.index("gobelin" if "gobelin" in card_types else "squelette")
+            if "gobelin_vignette.jpg" in card_types or "squelette_vignette.jpg" in card_types:
+                support_index = card_types.index("gobelin_vignette.jpg" if "gobelin_vignette.jpg" in card_types else "squelette_vignette.jpg")
                 support_x = attack_x + 30
                 support_y = attack_y + 30
                 self.attack_queue.append([support_index, [support_x, support_y]])
@@ -428,7 +433,7 @@ class bot():
         # Find mid-cost cards for split pushing
         split_candidates = []
         for i, card_type in enumerate(card_types):
-            if card_type in ["chevalier", "archere", "gobelin"]:
+            if card_type in ["chevalier_vignette.jpg", "archere_vignette.jpg", "gobelin_vignette.jpg"]:
                 split_candidates.append(i)
         
         if len(split_candidates) >= 2:
@@ -453,7 +458,7 @@ class bot():
         # Find cheap cards for chip damage
         chip_candidates = []
         for i, card_type in enumerate(card_types):
-            if card_type in ["gobelin", "squelette", "archere", "chauvesouris"]:
+            if card_type in ["gobelin_vignette.jpg", "squelette_vignette.jpg", "archere_vignette.jpg", "chauvesouris_vignette.jpg"]:
                 chip_candidates.append(i)
         
         if chip_candidates:
