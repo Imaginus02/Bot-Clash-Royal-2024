@@ -172,7 +172,7 @@ class bot():
         self.defense_timer = 0
         self.attack_queue = []
         self.last_defense_time = 0
-        self.coord_attaque = [[110,420],[365, 420]]
+        self.coord_attaque = [[100,370],[335, 370]]
         self.taunt = 0
         self.taunt_compteur = 0
         self.start_idle = 25
@@ -193,7 +193,7 @@ class bot():
         #[True,[0,"elixir",5],4*[0,"carte",carte.str],x*[1,[pos],"nom_objet",[w,h]]]
         #
         #[True, [0, 'elixir :', 4], [1, [292, 575], 'destroyed tower', [46, 61]], 
-        #[1, [108, 73], 'destroyed tower', [49, 65]], [1, [80, 75], 'destroyed tower', [46, 55]], [1, [282, 76], 'destroyed tower', [43, 51]], [0, 'carte 0', 0], [0, 'carte 1', 'geant_vignette.jpg'], [0, 'carte 2', 'geant_vignette.jpg'], [0, 'carte 3', 0], [1, [90, 29], 'fleches', [177, 40]], [1, [334, 367], 'geant', [27, 38]], [1, [349, 350], 'geant', [28, 38]], [1, [328, 360], 'geant', [30, 33]], [1, [334, 339], 'geant', [30, 30]], [1, [351, 322], 'geant', [27, 36]], [1, [338, 312], 'info-message', [31, 41]], [1, [347, 352], 'chevalier', [69, 62]], [1, [369, 342], 'geant', [35, 33]], 
+        #[1, [108, 73], 'destroyed tower', [49, 65], 0-1 vie], [1, [80, 75], 'destroyed tower', [46, 55]], [1, [282, 76], 'destroyed tower', [43, 51]], [0, 'carte 0', 0], [0, 'carte 1', 'geant_vignette.jpg'], [0, 'carte 2', 'geant_vignette.jpg'], [0, 'carte 3', 0], [1, [90, 29], 'fleches', [177, 40]], [1, [334, 367], 'geant', [27, 38]], [1, [349, 350], 'geant', [28, 38]], [1, [328, 360], 'geant', [30, 33]], [1, [334, 339], 'geant', [30, 30]], [1, [351, 322], 'geant', [27, 36]], [1, [338, 312], 'info-message', [31, 41]], [1, [347, 352], 'chevalier', [69, 62]], [1, [369, 342], 'geant', [35, 33]], 
         #[1, [343, 318], 'geant', [39, 46]]]
         
         self.compteur += 1
@@ -429,12 +429,21 @@ class bot():
         #print("push attack card type",card_types)
         
         # Queue up a strong push
-        target_tower = enemy_towers[0]  # Target the first enemy tower
+        #selects the weakest tower, excluding towers that where already destroyed
+        if(enemy_towers[0][2]=='destroyed tower'):
+            target_tower = enemy_towers[1]
+            attack_x,attack_y = self.coord_attaque[1]
+        elif(enemy_towers[1][2]=='destroyed tower'):
+            target_tower = enemy_towers[0]
+            attack_x,attack_y = self.coord_attaque[0]
+        elif(enemy_towers[0][4]>enemy_towers[1][4]):
+            target_tower = enemy_towers[0]
+            attack_x,attack_y = self.coord_attaque[0]
+        else:#by default it will atack the right tower
+            target_tower = enemy_towers[1]
+            attack_x,attack_y = self.coord_attaque[1]
         tower_x, tower_y = target_tower[1][0], target_tower[1][1]
         
-        # Position slightly away from the tower
-        attack_x = tower_x + (-100 if tower_x > 300 else 100)
-        attack_y = tower_y + (-100 if tower_y > 300 else 100)
         
         # Check for tank cards
         if "geant_vignette.jpg" in card_types:
@@ -444,7 +453,7 @@ class bot():
             # Queue support troops
             if "archere_vignette.jpg" in card_types:
                 support_index = card_types.index("archere_vignette.jpg")
-                support_x = attack_x + 30
+                support_x = attack_x
                 support_y = attack_y + 30
                 self.attack_queue.append([support_index, [support_x, support_y]])
             
@@ -459,7 +468,7 @@ class bot():
             # Queue support troops
             if "gobelin_vignette.jpg" in card_types or "squelette_vignette.jpg" in card_types:
                 support_index = card_types.index("gobelin_vignette.jpg" if "gobelin_vignette.jpg" in card_types else "squelette_vignette.jpg")
-                support_x = attack_x + 30
+                support_x = attack_x
                 support_y = attack_y + 30
                 self.attack_queue.append([support_index, [support_x, support_y]])
             
@@ -482,12 +491,10 @@ class bot():
         
         if len(split_candidates) >= 2:
             # Get two lanes for attack
-            left_lane = [200, 400]
-            right_lane = [500, 400]
             
             # Queue up split push
-            self.attack_queue.append([split_candidates[0], left_lane])
-            self.attack_queue.append([split_candidates[1], right_lane])
+            self.attack_queue.append([split_candidates[0], self.coord_attaque[0]])
+            self.attack_queue.append([split_candidates[1], self.coord_attaque[1]])
             
             # Return the first action
             return self.attack_queue.pop(0)
@@ -508,12 +515,21 @@ class bot():
         
         if chip_candidates:
             # Target tower
-            target_tower = enemy_towers[0]
+            if(enemy_towers[0][2]=='destroyed tower'):
+                target_tower = enemy_towers[1]
+                attack_x,attack_y = self.coord_attaque[1]
+            elif(enemy_towers[1][2]=='destroyed tower'):
+                target_tower = enemy_towers[0]
+                attack_x,attack_y = self.coord_attaque[0]
+            elif(enemy_towers[0][4]>enemy_towers[1][4]):
+                target_tower = enemy_towers[0]
+                attack_x,attack_y = self.coord_attaque[0]
+            else:#by default it will atack the right tower
+                target_tower = enemy_towers[1]
+                attack_x,attack_y = self.coord_attaque[1]
             tower_x, tower_y = target_tower[1][0], target_tower[1][1]
             
-            # Position offset from tower
-            attack_x = tower_x + (-80 if tower_x > 300 else 80)
-            attack_y = tower_y + (-80 if tower_y > 300 else 80)
+            attack_y += 20
             
             # Choose a cheap card
             cheap_card_index = chip_candidates[0]
