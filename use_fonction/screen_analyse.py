@@ -200,7 +200,7 @@ class Screen_analyse:
         for i in self.tower_roi:
             x,y,w,h=i
             roi = img[y:y+h, x:x+w]
-            part_state=[1,[x+w//2,y+h//2],"destroyed tower",[w,h]]
+            part_state=[1,[x+w//2,y+h//2],"destroyed tower",[w,h], 0]
             max_seuil=0
             for fichier in os.listdir(self.dossier_image_tower):
                 try:
@@ -220,11 +220,11 @@ class Screen_analyse:
                                 #cv2.imwrite("test_ennemy_"+str(i)+".jpg",img[y-1:y, x+9:x+w+5]) 
                                 health_bar = img[y-1:y, x+9:x+w+5]
                                 occurrences = len([x for x in health_bar[0] if (x[0] < 128)])
-                                part_state.append(occurrences/len(health_bar[0]))
+                                part_state.append(1-occurrences/len(health_bar[0]))
                             else:
                                 health_bar = img[y+h//2+9:y+h//2+10, x+12:x+w+5]
                                 occurrences = len([x for x in health_bar[0] if (x[1] < 128)])
-                                part_state.append(occurrences/len(health_bar[0]))
+                                part_state.append(1-occurrences/len(health_bar[0]))
                                 #cv2.imwrite("test_friendly_"+str(i)+".jpg",img[y+h//2+9:y+h//2+10, x+12:x+w+5])
                         
                 except:
