@@ -381,7 +381,7 @@ class bot():
         elif "valkyrie" in enemy_type.lower():
             defenders_priority = ["bat", "chevalier", "PK", "archere"]
         elif "squelette" in enemy_type.lower():
-            defenders_priority = ["buche", "squeltte", "gobelin", "archere"]
+            defenders_priority = ["buche", "squelette", "gobelin", "archere"]
         else:
             # Default priority
             defenders_priority = ["chevalier", "squelette", "gobelin", "archere", "PK", "buche"]
