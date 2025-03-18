@@ -51,6 +51,9 @@ while running:
     # print(state)
     if state[0] == True:
         action = bot_ia.get_action(state, image)
+    else:
+        action = []
+        bot_ia.start_time = time.time()
 
     if action!=[]:
         #print(action)

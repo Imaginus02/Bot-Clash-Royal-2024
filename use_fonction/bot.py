@@ -21,6 +21,7 @@ import math
 import random
 import numpy as np
 import cv2
+import time
 
 
 prix_cartes = {
@@ -155,7 +156,6 @@ class bot():
 
     """
     def __init__(self):
-        self.compteur = 0
         """
         Créer un objet qui a pour but de choisir l'action à effectuer en fonction de l'état de la partie clash royal.
 
@@ -165,7 +165,6 @@ class bot():
         Returns:
             None
         """
-        self.compteur = 0
         self.last_card_played = None
         self.elixir_threshold = 6  # Default threshold for playing cards
         self.defense_mode = False
@@ -175,7 +174,12 @@ class bot():
         self.coord_attaque = [[100,370],[335, 370]]
         self.taunt = 0
         self.taunt_compteur = 0
-        self.start_idle = 25
+        
+        self.start_time = time.time()
+        self.start_idle = 2 + self.start_time
+        self.last_frame_time = self.start_time
+        self.elapsed_time_sinc_last_frame = 0
+        self.last_attach_resest = self.start_time
         
 
     def get_action(self, state, image):
@@ -195,8 +199,9 @@ class bot():
         #[True, [0, 'elixir :', 4], [1, [292, 575], 'destroyed tower', [46, 61]], 
         #[1, [108, 73], 'destroyed tower', [49, 65], 0-1 vie], [1, [80, 75], 'destroyed tower', [46, 55]], [1, [282, 76], 'destroyed tower', [43, 51]], [0, 'carte 0', 0], [0, 'carte 1', 'geant_vignette.jpg'], [0, 'carte 2', 'geant_vignette.jpg'], [0, 'carte 3', 0], [1, [90, 29], 'fleches', [177, 40]], [1, [334, 367], 'geant', [27, 38]], [1, [349, 350], 'geant', [28, 38]], [1, [328, 360], 'geant', [30, 33]], [1, [334, 339], 'geant', [30, 30]], [1, [351, 322], 'geant', [27, 36]], [1, [338, 312], 'info-message', [31, 41]], [1, [347, 352], 'chevalier', [69, 62]], [1, [369, 342], 'geant', [35, 33]], 
         #[1, [343, 318], 'geant', [39, 46]]]
-        
-        self.compteur += 1
+        self.elapsed_time_sinc_last_frame = time.time() - self.last_frame_time
+        self.last_frame_time = time.time()
+        print("Elapsed time since last frame:", self.elapsed_time_sinc_last_frame)
         action = []
         
         
@@ -225,13 +230,12 @@ class bot():
         #print("our_towers",our_towers)
         #print("enemy_towers",enemy_towers)
         # Bot logic
-        #print(self.compteur)
-        if self.compteur > self.start_idle and self.taunt == 0 and (enemy_towers[0][2] == "destroyed tower" or enemy_towers[1][2] == "destroyed tower"):
+        if time.time() > self.start_idle and self.taunt == 0 and (enemy_towers[0][2] == "destroyed tower" or enemy_towers[1][2] == "destroyed tower"):
             print("Ennemy tower destroyed, start taunting")
             self.taunt = 1
-            self.taunt_compteur = self.compteur + 8
+            self.taunt_compteur = time.time() + 0.5
             return [4, [37,671]]
-        elif self.taunt == 1 and self.compteur >= self.taunt_compteur:
+        elif self.taunt == 1 and time.time() >= self.taunt_compteur:
             self.taunt = 2
             if (enemy_towers[0][2] == "destroyed tower" and enemy_towers[1][2] == "destroyed tower"):
                 self.taunt = 3
@@ -240,27 +244,28 @@ class bot():
             self.taunt = 0
             self.taunt_compteur = 0           
         else:
-            if self.compteur > self.start_idle:
+            if time.time() > self.start_idle:
                 action = self.decide_action(elixir, our_towers, enemy_towers, cards, friendly_entities, enemy_entities)
         return action
 
     def decide_action(self, elixir, our_towers, enemy_towers, cards, friendly_entities, enemy_entities):
         # Reset attack queue if needed
-        if self.compteur % 600 == 0:  # Every ~10 seconds
+        if time.time() - self.last_attach_resest >= 10:  # Every ~10 seconds
             self.attack_queue = []
+            self.last_attach_resest = time.time()
         
         # Check if we need to defend
         if self.should_defend(enemy_entities, our_towers) and not self.defense_mode:
             #print("defense")
             self.defense_mode = True
-            self.defense_timer = self.compteur + 15  # Stay in defense mode for ~2.5 seconds
-            self.last_defense_time = self.compteur
+            self.defense_timer = time.time() + 2.5  # Stay in defense mode for ~2.5 seconds
+            self.last_defense_time = time.time()
         
         # Check if we can exit defense mode
-        if self.defense_mode and self.compteur >= self.defense_timer:
+        if self.defense_mode and time.time() >= self.defense_timer:
             self.defense_mode = False
         elif self.defense_mode:
-            print("Remaining in defense mode for {} frames".format(self.defense_timer - self.compteur))
+            print("Remaining in defense mode for {}s".format(self.defense_timer - time.time()))
             pass
         
         # If we're in defense mode, prioritize defense
@@ -291,7 +296,7 @@ class bot():
             return self.attack(elixir, enemy_towers, cards, friendly_entities)
         
         # If we have low elixir or just defended, wait
-        if elixir < 5 or (self.compteur - self.last_defense_time) < 60:
+        if elixir < 5 or (time.time() - self.last_defense_time) < 2.5:
             return []
         
         # Default action: wait and accumulate elixir
