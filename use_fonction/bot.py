@@ -229,13 +229,13 @@ class bot():
         if self.compteur > self.start_idle and self.taunt == 0 and (enemy_towers[0][2] == "destroyed tower" or enemy_towers[1][2] == "destroyed tower"):
             print("Ennemy tower destroyed, start taunting")
             self.taunt = 1
-            self.taunt_compteur = self.compteur + 6
-            return [4, [100, 100]]
+            self.taunt_compteur = self.compteur + 8
+            return [4, [37,671]]
         elif self.taunt == 1 and self.compteur >= self.taunt_compteur:
             self.taunt = 2
             if (enemy_towers[0][2] == "destroyed tower" and enemy_towers[1][2] == "destroyed tower"):
                 self.taunt = 3
-            return [5, [100, 100]]
+            return [5, [109,535]]
         elif self.taunt == 2 and (enemy_towers[0][2] == "destroyed tower" and enemy_towers[1][2] == "destroyed tower"):
             self.taunt = 0
             self.taunt_compteur = 0           
