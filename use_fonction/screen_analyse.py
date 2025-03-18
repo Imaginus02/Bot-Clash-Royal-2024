@@ -28,6 +28,7 @@ from ultralytics import YOLO
 import cv2
 import os
 import numpy as np
+import math
 
 class Screen_analyse:
     """
@@ -182,7 +183,8 @@ class Screen_analyse:
         #cv2.imshow("elixir",elixir_bar)
         #cv2.waitKey(100)
         occurrences = len([x for x in elixir_bar if (x[0] > 150 and x[2]>150)])
-        return int(((occurrences+20)/w)*10)
+        #return int(((occurrences+20)/w)*10)
+        return math.floor((occurrences/w)*10)
     
     def get_tower_state(self,img):
         """

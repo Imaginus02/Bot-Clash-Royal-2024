@@ -96,9 +96,10 @@ class controller():
         y=action[1][1]
         self.mouse.position = self.Screen_video_capture.dev_position_to_screen(x,y)
         #print("move to :",self.Screen_video_capture.dev_position_to_screen(x,y))
-        self.mouse.click(Button.left, 1)
-        self.mouse.position = position
-        self.mouse.click(Button.left, 1)
+        if action[0]<4:
+            self.mouse.click(Button.left, 1)
+            self.mouse.position = position
+            self.mouse.click(Button.left, 1)
 
     def get_position(self):
         """

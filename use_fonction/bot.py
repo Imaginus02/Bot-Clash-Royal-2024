@@ -279,9 +279,13 @@ class bot():
                 #print(card_index)
                 #print("Next attack:", cards[card_index][1], position)
                 # Verify the card is available
-                if card_index < len(cards) and elixir >= prix_cartes[cards[card_index][2]]:  # Ensure we have enough elixir
-                    self.last_card_played = cards[card_index][1]
-                    return [card_index, position]
+                try:
+                    if card_index < len(cards) and elixir >= prix_cartes[cards[card_index][2]]:  # Ensure we have enough elixir
+                        self.last_card_played = cards[card_index][1]
+                        return [card_index, position]
+                except:
+                    with open("error_log.txt", "a") as error_file:
+                        error_file.write(f"Error with card_index: {card_index}, cards: {cards}\n")
             
             # Otherwise, decide on a new attack
             return self.attack(elixir, enemy_towers, cards, friendly_entities)
