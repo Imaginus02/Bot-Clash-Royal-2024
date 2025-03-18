@@ -24,7 +24,7 @@ import yaml
 chemin_use_fonction = 'D:\\clash royale\\Bot-Clash-Royal-2024\\use_fonction\\'
 
 chemin_vgg10='ai_creation\\ia_ingame\\vgg10_model_light.pth'
-chemin_yolo=chemin_use_fonction+"v2.pt"
+chemin_yolo=chemin_use_fonction+"best.pt"
 
 fichier_yaml = 'D:\\clash royale\\Bot-Clash-Royal-2024\\use_fonction\\configuration\\data.yaml'
 with open(fichier_yaml, 'r') as fichier:

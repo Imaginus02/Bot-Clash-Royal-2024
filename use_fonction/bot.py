@@ -31,7 +31,7 @@ prix_cartes = {
     "geant_vignette.jpg":5,
     "PK_vignette.jpg":4,
     "buche_vignette.jpg":2,
-    "chauvesouris_vignette.jpg":2
+    "bat_vignette.jpg":2
 }
 
 def parse_state(state):
@@ -252,6 +252,8 @@ class bot():
             if self.attack_queue:
                 next_attack = self.attack_queue.pop(0)
                 card_index, position = next_attack
+                print(card_index)
+                print("Next attack:", cards[card_index][1], position)
                 # Verify the card is available
                 if card_index < len(cards) and elixir >= prix_cartes[cards[card_index][2]]:  # Ensure we have enough elixir
                     self.last_card_played = cards[card_index][1]
@@ -333,8 +335,10 @@ class bot():
         return []
     
     def choose_defender(self, cards, enemy_type):
+        #print("Choosing defender for", enemy_type)
         # Map cards to indices
         card_indices = {cards[i][2]: i for i in range(len(cards))}
+        #print("available cards",card_indices)
         
         # Prioritize defenders based on enemy type
         defenders_priority = []
@@ -342,7 +346,7 @@ class bot():
         # Handle different enemy types with appropriate counters
         if "geant" in enemy_type.lower():
             defenders_priority = ["PK", "squelette", "gobelin", "archere"]
-        elif "chauvesouris" in enemy_type.lower():
+        elif "bat" in enemy_type.lower():
             defenders_priority = ["archere", "squelette", "gobelin", "chevalier"]
         elif "chevalier" in enemy_type.lower():
             defenders_priority = ["squelette", "gobelin", "PK", "archere"]
@@ -354,7 +358,9 @@ class bot():
         
         # Find the first available defender from our priority list
         for defender in defenders_priority:
-            if defender in card_indices:
+            if (defender+"_vignette.jpg") in card_indices:
+                #print("Defending against", enemy_type, "with", defender)
+                #print("Using card", cards[card_indices[defender+"_vignette.jpg"]][1])
                 return card_indices[defender+ "_vignette.jpg"]
         
         # If none of our preferred defenders are available, use any card
@@ -384,6 +390,7 @@ class bot():
     def execute_push_attack(self, cards, enemy_towers):
         """Strong push with tank + support troops"""
         card_types = [card[2] for card in cards]
+        print("push attack card type",card_types)
         
         # Queue up a strong push
         target_tower = enemy_towers[0]  # Target the first enemy tower
@@ -394,12 +401,12 @@ class bot():
         attack_y = tower_y + (-100 if tower_y > 300 else 100)
         
         # Check for tank cards
-        if "geant" in card_types:
+        if "geant_vignette.jpg" in card_types:
             tank_index = card_types.index("geant_vignette.jpg")
             self.attack_queue.append([tank_index, [attack_x, attack_y]])
             
             # Queue support troops
-            if "archere" in card_types:
+            if "archere_vignette.jpg" in card_types:
                 support_index = card_types.index("archere_vignette.jpg")
                 support_x = attack_x + 30
                 support_y = attack_y + 30
@@ -428,7 +435,8 @@ class bot():
     
     def execute_split_attack(self, cards, enemy_towers):
         """Split attack on two lanes to divide opponent's attention"""
-        card_types = [card[1] for card in cards]
+        card_types = [card[2] for card in cards]
+        print("split attack",card_types)
         
         # Find mid-cost cards for split pushing
         split_candidates = []
@@ -453,12 +461,13 @@ class bot():
     
     def execute_chip_attack(self, cards, enemy_towers):
         """Chip damage with cheap cards"""
-        card_types = [card[1] for card in cards]
+        card_types = [card[2] for card in cards]
+        print("chip attack cards type",card_types)
         
         # Find cheap cards for chip damage
         chip_candidates = []
         for i, card_type in enumerate(card_types):
-            if card_type in ["gobelin_vignette.jpg", "squelette_vignette.jpg", "archere_vignette.jpg", "chauvesouris_vignette.jpg"]:
+            if card_type in ["gobelin_vignette.jpg", "squelette_vignette.jpg", "archere_vignette.jpg", "bat_vignette.jpg"]:
                 chip_candidates.append(i)
         
         if chip_candidates:

@@ -8,6 +8,6 @@ names: ['0', 'archere', 'bat', 'chevalier', 'gargouille', 'geant', 'gobelin', 'g
 roboflow:
   workspace: minesbot
   project: clash-royale-bot
-  version: 21
+  version: 22
   license: CC BY 4.0
-  url: https://universe.roboflow.com/minesbot/clash-royale-bot/dataset/21
+  url: https://universe.roboflow.com/minesbot/clash-royale-bot/dataset/22
