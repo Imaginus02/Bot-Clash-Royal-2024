@@ -347,18 +347,12 @@ class bot():
             if defender_index is not None:
                 # Place defender between enemy and tower
                 target_tower = min(our_towers, key=lambda t: ((t[1][0] - enemy_x) ** 2 + (t[1][1] - enemy_y) ** 2) ** 0.5)
-                tower_x, tower_y = target_tower[1][0], target_tower[1][1]
-                
-                # Calculate midpoint between enemy and tower
-                mid_x = (enemy_x + tower_x) // 2
-                mid_y = (enemy_y + tower_y) // 2
-                
-                # Ensure within playable area
-                mid_x = max(100, min(mid_x, 600))
-                mid_y = max(100, min(mid_y, 600))
+                defend_x = target_tower[1][0]
+                defend_y = target_tower[1][1]-30
+                #[78,458,54,65],[312,458,54,65]
                 
                 self.last_card_played = cards[defender_index][1]
-                return [defender_index, [mid_x, mid_y]]
+                return [defender_index, [defend_x,defend_y]]
         
         return []
     
@@ -387,7 +381,7 @@ class bot():
         elif "valkyrie" in enemy_type.lower():
             defenders_priority = ["bat", "chevalier", "PK", "archere"]
         elif "squelette" in enemy_type.lower():
-            defenders_priority = ["buche", "squeltte", "gobelin", "archere"]
+            defenders_priority = ["buche", "squelette", "gobelin", "archere"]
         else:
             # Default priority
             defenders_priority = ["chevalier", "squelette", "gobelin", "archere", "PK", "buche"]
