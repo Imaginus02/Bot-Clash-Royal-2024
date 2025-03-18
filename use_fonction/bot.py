@@ -353,9 +353,17 @@ class bot():
             defenders_priority = ["squelette", "gobelin", "PK", "archere"]
         elif "gobelin" in enemy_type.lower() or "squelette" in enemy_type.lower():
             defenders_priority = ["buche", "chevalier", "archere"]
+        elif "zappy" in enemy_type.lower():
+            defenders_priority = ["bat", "PK", "chevalier", "archere"]
+        elif "mousquetaire" in enemy_type.lower():
+            defenders_priority = ["squelette", "chevalier", "archere", "buche"]
+        elif "valkyrie" in enemy_type.lower():
+            defenders_priority = ["bat", "chevalier", "PK", "archere"]
+        elif "squelette" in enemy_type.lower():
+            defenders_priority = ["buche", "squeltte", "gobelin", "archere"]
         else:
             # Default priority
-            defenders_priority = ["chevalier", "archere", "gobelin", "squelette", "PK", "buche"]
+            defenders_priority = ["chevalier", "squelette", "gobelin", "archere", "PK", "buche"]
         
         # Find the first available defender from our priority list
         for defender in defenders_priority:
