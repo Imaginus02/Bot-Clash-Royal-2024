@@ -79,20 +79,20 @@ class controller():
         """
         # action = [int([0-3],pos[int(x),int(y)])]
         position = self.mouse.position
-        print("action en lancement")
+        #print("action en lancement")
         self.mouse.position = self.Screen_video_capture.dev_position_to_screen(3,3)
         self.mouse.click(Button.left, 1)
         x=self.action_pos[action[0]][0]
         y=self.action_pos[action[0]][1]
-        print(x,y)
+        #print(x,y)
         self.mouse.position = self.Screen_video_capture.dev_position_to_screen(x,y)
-        print("move to :",self.Screen_video_capture.dev_position_to_screen(x,y))
+        #print("move to :",self.Screen_video_capture.dev_position_to_screen(x,y))
         self.mouse.click(Button.left, 1)
         time.sleep(0.2)
         x=action[1][0]
         y=action[1][1]
         self.mouse.position = self.Screen_video_capture.dev_position_to_screen(x,y)
-        print("move to :",self.Screen_video_capture.dev_position_to_screen(x,y))
+        #print("move to :",self.Screen_video_capture.dev_position_to_screen(x,y))
         self.mouse.click(Button.left, 1)
         self.mouse.position = position
         self.mouse.click(Button.left, 1)

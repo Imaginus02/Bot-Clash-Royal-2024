@@ -40,7 +40,7 @@ mouse_v = controller_initialisation(windows_capture)
 
 # créer bot
 bot_ia = bot()
-
+clock = pygame.time.Clock()
 running = True
 while running:
     old = time.time()
@@ -51,7 +51,7 @@ while running:
     action = bot_ia.get_action(state, image)
 
     if action!=[]:
-        print(action)
+        #print(action)
         time.sleep(1)
         mouse_v.do_action(action)
         # time.sleep(5)
@@ -67,6 +67,7 @@ while running:
             if event.button == 1:  # bouton gauche
                 m_x, m_y = pygame.mouse.get_pos()
                 mouse_v.click(m_x, m_y)
+    clock.tick(60)
         
 
 screen_ui.end_ui()

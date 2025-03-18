@@ -228,7 +228,7 @@ class bot():
         
         # Check if we need to defend
         if self.should_defend(enemy_entities, our_towers) and not self.defense_mode:
-            print("defense")
+            #print("defense")
             self.defense_mode = True
             self.defense_timer = self.compteur + 15  # Stay in defense mode for ~2.5 seconds
             self.last_defense_time = self.compteur
@@ -236,8 +236,9 @@ class bot():
         # Check if we can exit defense mode
         if self.defense_mode and self.compteur >= self.defense_timer:
             self.defense_mode = False
-        else:
+        elif self.defense_mode:
             print("Remaining in defense mode for {} frames".format(self.defense_timer - self.compteur))
+            pass
         
         # If we're in defense mode, prioritize defense
         if self.defense_mode:
@@ -247,13 +248,13 @@ class bot():
         
         # If we have enough elixir and not in immediate danger, check for attack opportunities
         if elixir >= self.elixir_threshold and not self.defense_mode:
-            print("attack")
+            #print("attack")
             # If we have attack queued, execute the next one
             if self.attack_queue:
                 next_attack = self.attack_queue.pop(0)
                 card_index, position = next_attack
-                print(card_index)
-                print("Next attack:", cards[card_index][1], position)
+                #print(card_index)
+                #print("Next attack:", cards[card_index][1], position)
                 # Verify the card is available
                 if card_index < len(cards) and elixir >= prix_cartes[cards[card_index][2]]:  # Ensure we have enough elixir
                     self.last_card_played = cards[card_index][1]
@@ -398,7 +399,7 @@ class bot():
     def execute_push_attack(self, cards, enemy_towers):
         """Strong push with tank + support troops"""
         card_types = [card[2] for card in cards]
-        print("push attack card type",card_types)
+        #print("push attack card type",card_types)
         
         # Queue up a strong push
         target_tower = enemy_towers[0]  # Target the first enemy tower
@@ -444,7 +445,7 @@ class bot():
     def execute_split_attack(self, cards, enemy_towers):
         """Split attack on two lanes to divide opponent's attention"""
         card_types = [card[2] for card in cards]
-        print("split attack",card_types)
+        #print("split attack",card_types)
         
         # Find mid-cost cards for split pushing
         split_candidates = []
@@ -470,7 +471,7 @@ class bot():
     def execute_chip_attack(self, cards, enemy_towers):
         """Chip damage with cheap cards"""
         card_types = [card[2] for card in cards]
-        print("chip attack cards type",card_types)
+        #print("chip attack cards type",card_types)
         
         # Find cheap cards for chip damage
         chip_candidates = []

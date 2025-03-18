@@ -179,6 +179,8 @@ class Screen_analyse:
         """
         x,y,w,h=self.elixir_roi
         elixir_bar = img[y:y+h, x:x+w][0]
+        #cv2.imshow("elixir",elixir_bar)
+        #cv2.waitKey(100)
         occurrences = len([x for x in elixir_bar if (x[0] > 150 and x[2]>150)])
         return int(((occurrences+20)/w)*10)
     
@@ -211,6 +213,18 @@ class Screen_analyse:
                         if max_val >= seuil and max_val>max_seuil:
                             max_seuil = max_val
                             part_state=[1,[x+w//2,y+h//2],"alive tower",[w,h]]
+                            #On veut essayer d'isoler la barre de vie de la tour juste au dessus dans le cas des ennemis
+                            if y < 400:
+                                #cv2.imwrite("test_ennemy_"+str(i)+".jpg",img[y-1:y, x+9:x+w+5]) 
+                                health_bar = img[y-1:y, x+9:x+w+5]
+                                occurrences = len([x for x in health_bar[0] if (x[0] < 128)])
+                                part_state.append(occurrences/len(health_bar[0]))
+                            else:
+                                health_bar = img[y+h//2+9:y+h//2+10, x+12:x+w+5]
+                                occurrences = len([x for x in health_bar[0] if (x[1] < 128)])
+                                part_state.append(occurrences/len(health_bar[0]))
+                                #cv2.imwrite("test_friendly_"+str(i)+".jpg",img[y+h//2+9:y+h//2+10, x+12:x+w+5])
+                        
                 except:
                     a=0
             state.append(part_state)

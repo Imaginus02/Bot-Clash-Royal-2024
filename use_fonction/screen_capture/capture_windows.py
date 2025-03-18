@@ -71,7 +71,8 @@ class Screen_video_capture:
         # Afficher les fenêtres avec un index
         for index, window in enumerate(all_windows):
             if window.title != '':
-                print(f"{index}: {window.title} ---- , Position: {window.left}, {window.top}, Taille: {window.width}x{window.height}")
+                #print(f"{index}: {window.title} ---- , Position: {window.left}, {window.top}, Taille: {window.width}x{window.height}")
+                pass
             if window.title == "Clash Royale":
                 self.window = gw.getWindowsWithTitle(window.title)[0]
                 return None
@@ -80,13 +81,15 @@ class Screen_video_capture:
         try:
             choice = int(input("Entrez le numéro de la fenêtre que vous souhaitez sélectionner : "))
             selected_window = all_windows[choice]
-            print(f"Vous avez sélectionné : {selected_window.title}")
+            #print(f"Vous avez sélectionné : {selected_window.title}")
             self.window = gw.getWindowsWithTitle(selected_window.title)[0]
             # self.window.activate()
         except ValueError:
-            print("Veuillez entrer un nombre entier.")
+            #print("Veuillez entrer un nombre entier.")
+            pass
         except IndexError:
-            print("Le numéro entré ne correspond à aucune fenêtre.")
+            #print("Le numéro entré ne correspond à aucune fenêtre.")
+            pass
 
     def get_screen(self):
         """
