@@ -74,19 +74,20 @@ def categorize_teams(entities, image, debug=False):
 
         # Extract the bounding box region from the image
         # Calculate the top-left corner of the bounding box from the center coordinates
+        bounding_offset = 0 #extends the bounding box to include the small red box on the ennemy
         top_left_x = pos_x - w // 2
-        top_left_y = pos_y - h // 2
+        top_left_y = pos_y - h // 2 -bounding_offset
 
         # Extract the bounding box region from the image
-        bbox = image[top_left_y:top_left_y + h, top_left_x:top_left_x + w]
+        bbox = image[top_left_y:top_left_y + h +bounding_offset, top_left_x:top_left_x + w]
 
         # Convert the bounding box to HSV color space for easier color detection
         hsv_bbox = cv2.cvtColor(bbox, cv2.COLOR_BGR2HSV)
 
         # Define color ranges for gold/yellow and blue in HSV
         # Gold/yellow health bars
-        lower_gold = np.array([20, 100, 100])  # Gold/yellow range (adjust as needed)
-        upper_gold = np.array([35, 255, 255])
+        lower_gold = np.array([13, 50, 70])  # Gold/yellow range (adjust as needed)
+        upper_gold = np.array([22, 200, 150])
         
         # Blue health bars
         lower_blue = np.array([90, 50, 50])  # Blue range (expanded to catch more blue tones)
@@ -107,7 +108,7 @@ def categorize_teams(entities, image, debug=False):
 
         # Determine the team based on the dominant color
         # Let's use the colors to determine the actual team
-        if blue_ratio > gold_ratio and blue_ratio > 0.3:
+        if blue_ratio > gold_ratio and blue_ratio > 0.5:
             team = 'enemy'  # Enemy team (blue health bars)
         elif gold_ratio > 0.01:  # Lower threshold to catch more gold
             team = 'friendly'  # Your team (gold health bars)
@@ -137,7 +138,7 @@ def categorize_teams(entities, image, debug=False):
             cv2.waitKey(500)  # Wait for 500ms instead of indefinitely
             cv2.destroyAllWindows()
 
-        categorized_entities.append((entity_id, team))
+        categorized_entities.append((entity_id, team, round(blue_ratio,2), round(gold_ratio,2)))
 
     return categorized_entities
 
@@ -204,12 +205,12 @@ class bot():
         
         # Convert teams list to a dictionary for easier access
         entity_teams = {}
-        for i, (entity_id, team) in enumerate(teams):
+        for i, (entity_id, team, _, _) in enumerate(teams):
             entity_teams[entity_id] = team
         
         # Extract friendly and enemy entities
-        friendly_entities = [entities[i] for i, (entity_id, team) in enumerate(teams) if team == "friendly"]
-        enemy_entities = [entities[i] for i, (entity_id, team) in enumerate(teams) if team == "enemy"]
+        friendly_entities = [entities[i] for i, (entity_id, team, _, _) in enumerate(teams) if team == "friendly"]
+        enemy_entities = [entities[i] for i, (entity_id, team, _, _) in enumerate(teams) if team == "enemy"]
         
         # Check tower health
         our_towers = [tower for tower in towers if tower[1][1] > 400] # Assume towers under y=400 are ours
