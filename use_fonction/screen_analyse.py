@@ -107,11 +107,11 @@ class Screen_analyse:
             # print("#################")
             boxes = result.boxes.xywh.cpu().numpy()
             # print(result.boxes.cls)
-            u=0
+            u=2
             for i in boxes:
                 # print(i)
-                id=int(result.boxes.cls[u])
-                state.append([1,[int(i[0]),int(i[1])],str(self.classes[id]),[int(i[2]),int(i[3])]])
+                id=int(result.boxes.cls[u-2])
+                state.append([u,[int(i[0]),int(i[1])],str(self.classes[id]),[int(i[2]),int(i[3])]])
                 u+=1
         return state
     

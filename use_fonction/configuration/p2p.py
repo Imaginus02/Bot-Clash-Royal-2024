@@ -21,12 +21,12 @@ Variables:
 import json
 import yaml
 
-chemin_use_fonction = 'C:\\Users\\Minecraft\\OneDrive\\Bureau\\Mines\\2A\\Bot-Clash-Royal-2024\\use_fonction\\'
+chemin_use_fonction = 'D:\\clash royale\\Bot-Clash-Royal-2024\\use_fonction\\'
 
 chemin_vgg10='ai_creation\\ia_ingame\\vgg10_model_light.pth'
 chemin_yolo=chemin_use_fonction+"best.pt"
 
-fichier_yaml = 'C:\\Users\\Minecraft\\OneDrive\\Bureau\\Mines\\2A\\Bot-Clash-Royal-2024\\use_fonction\\configuration\\data.yaml'
+fichier_yaml = 'D:\\clash royale\\Bot-Clash-Royal-2024\\use_fonction\\configuration\\data.yaml'
 with open(fichier_yaml, 'r') as fichier:
     labels = yaml.safe_load(fichier)
 
@@ -34,7 +34,7 @@ classes_yolo=labels["names"]
 # print(classes_yolo)
 
 # Chemin vers votre fichier JSON
-fichier_json = "C:\\Users\\Minecraft\\OneDrive\\Bureau\\Mines\\2A\\Bot-Clash-Royal-2024\\use_fonction\\configuration\\roi_data.json"
+fichier_json = "D:\\clash royale\\Bot-Clash-Royal-2024\\use_fonction\\configuration\\roi_data.json"
 with open(fichier_json, 'r') as fichier:
     roi_info = json.load(fichier)
 

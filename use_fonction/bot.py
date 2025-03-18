@@ -47,9 +47,8 @@ def parse_state(state):
                 elixir = state[1][2]
                 temp = [i for i in state if type(i) == list]
                 cards = [i for i in temp if i[0] == 0 and 'carte' in i[1]]
-                entities = [i for i in temp if i[0] == 1]
-                towers = [i for i in entities if 'destroyed tower' in i[2] or "alive tower" in i[2]]
-                entities = [entity for entity in entities if entity not in towers]
+                entities = [i for i in temp if i[0] > 1]
+                towers = [i for i in temp if i[0] == 1]
                 return elixir, towers, cards, entities
 
 
@@ -74,12 +73,12 @@ def categorize_teams(entities, image, debug=False):
 
         # Extract the bounding box region from the image
         # Calculate the top-left corner of the bounding box from the center coordinates
-        bounding_offset = 0 #extends the bounding box to include the small red box on the ennemy
-        top_left_x = pos_x - w // 2
-        top_left_y = pos_y - h // 2 -bounding_offset
+        bounding_offset = 20 #extends the bounding box to include the small red box on the ennemy
+        top_left_x = pos_x - (w // 2)
+        top_left_y = pos_y - (h // 2)
 
         # Extract the bounding box region from the image
-        bbox = image[top_left_y:top_left_y + h +bounding_offset, top_left_x:top_left_x + w]
+        bbox = image[top_left_y-bounding_offset:top_left_y + h + bounding_offset, top_left_x:top_left_x + w]
 
         # Convert the bounding box to HSV color space for easier color detection
         hsv_bbox = cv2.cvtColor(bbox, cv2.COLOR_BGR2HSV)
@@ -174,6 +173,10 @@ class bot():
         self.attack_queue = []
         self.last_defense_time = 0
         self.coord_attaque = [[110,420],[365, 420]]
+        self.taunt = 0
+        self.taunt_compteur = 0
+        self.start_idle = 25
+        
 
     def get_action(self, state, image):
         """
@@ -194,6 +197,9 @@ class bot():
         #[1, [343, 318], 'geant', [39, 46]]]
         
         self.compteur += 1
+        action = []
+        
+        
         
         # If no state, return empty action
         if not state[0]:
@@ -219,7 +225,23 @@ class bot():
         #print("our_towers",our_towers)
         #print("enemy_towers",enemy_towers)
         # Bot logic
-        action = self.decide_action(elixir, our_towers, enemy_towers, cards, friendly_entities, enemy_entities)
+        #print(self.compteur)
+        if self.compteur > self.start_idle and self.taunt == 0 and (enemy_towers[0][2] == "destroyed tower" or enemy_towers[1][2] == "destroyed tower"):
+            print("Ennemy tower destroyed, start taunting")
+            self.taunt = 1
+            self.taunt_compteur = self.compteur + 6
+            return [4, [100, 100]]
+        elif self.taunt == 1 and self.compteur >= self.taunt_compteur:
+            self.taunt = 2
+            if (enemy_towers[0][2] == "destroyed tower" and enemy_towers[1][2] == "destroyed tower"):
+                self.taunt = 3
+            return [5, [100, 100]]
+        elif self.taunt == 2 and (enemy_towers[0][2] == "destroyed tower" and enemy_towers[1][2] == "destroyed tower"):
+            self.taunt = 0
+            self.taunt_compteur = 0           
+        else:
+            if self.compteur > self.start_idle:
+                action = self.decide_action(elixir, our_towers, enemy_towers, cards, friendly_entities, enemy_entities)
         return action
 
     def decide_action(self, elixir, our_towers, enemy_towers, cards, friendly_entities, enemy_entities):

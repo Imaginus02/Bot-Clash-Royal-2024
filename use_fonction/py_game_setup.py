@@ -101,7 +101,7 @@ class Screen_UI:
                 teams = categorize_teams(entities, image)
             for part_state in state[1:]:
                 i+=1
-                if part_state[0] == 1:
+                if part_state[0] > 1:
                     if part_state in entities and analyze_teams:
                         if teams[entities.index(part_state)][1] == "none":
                             color = self.white

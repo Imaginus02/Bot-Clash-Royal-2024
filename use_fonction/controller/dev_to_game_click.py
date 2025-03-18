@@ -42,7 +42,10 @@ class controller():
         self.action_pos = {0:[171,743],
                            1:[243,738],
                            2:[333,744],
-                           3:[408,756]}
+                           3:[408,756],
+                           4:[37,671],
+                           5:[109,535],
+                           6:[350,530]}
         self.Screen_video_capture=Screen_video_capture
 
     def click(self,x ,y ):

@@ -42,13 +42,15 @@ mouse_v = controller_initialisation(windows_capture)
 bot_ia = bot()
 clock = pygame.time.Clock()
 running = True
+action = []
 while running:
     old = time.time()
     # print(old)
     image = windows_capture.get_screen()
     state = analyse.get_state(image)
     # print(state)
-    action = bot_ia.get_action(state, image)
+    if state[0] == True:
+        action = bot_ia.get_action(state, image)
 
     if action!=[]:
         #print(action)
