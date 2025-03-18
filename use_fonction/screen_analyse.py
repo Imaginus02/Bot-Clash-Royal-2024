@@ -101,7 +101,7 @@ class Screen_analyse:
         for i in range(len(cartes)):
             state.append([0,"carte "+str(i),cartes[i]])
         #yolo pour trouver les unitées
-        self.yolo.to('cpu')
+        #self.yolo.to('cpu')
         results = self.yolo(img)
         # print("result ---------------------------------")
         for result in results:
