@@ -240,7 +240,7 @@ class bot():
             self.taunt = 0
             self.taunt_compteur = 0           
         else:
-            if self.compteur > self.start_idle:
+            if self.compteur > self.start_idle and 0:
                 action = self.decide_action(elixir, our_towers, enemy_towers, cards, friendly_entities, enemy_entities)
         return action
 
