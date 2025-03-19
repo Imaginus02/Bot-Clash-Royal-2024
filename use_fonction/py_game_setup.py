@@ -118,8 +118,9 @@ class Screen_UI:
                     y = 30 + part_state[1][1] - int(y_l/2)
                     pygame.draw.rect(self.window, color, (x, y-10, x_l, y_l+10), 2)
                     #pygame.draw.rect(self.window, color, (x-5, y-10, x_l+10, 15), 2)
-                if part_state in entities and analyze_teams:
-                    text_part_state = self.font_state.render(str(part_state[1])+"  "+str(part_state[2])+" "+str(teams[entities.index(part_state)][2])+" "+str(teams[entities.index(part_state)][3]), True, (255, 255, 255))
+                if analyze_teams:
+                    if part_state in entities:
+                        text_part_state = self.font_state.render(str(part_state[1])+"  "+str(part_state[2])+" "+str(teams[entities.index(part_state)][2])+" "+str(teams[entities.index(part_state)][3]), True, (255, 255, 255))
                 else:
                     text_part_state = self.font_state.render(str(part_state[1])+"  "+str(part_state[2]), True, (255, 255, 255))
                 self.window.blit(text_part_state, (self.x + 35, 30 + i*25))
