@@ -86,12 +86,12 @@ def categorize_teams(entities, image, debug=False):
         #rgb_box = bbox
 
         # Blue health bars
-        lower_blue = np.array([30, 40, 70]) 
+        lower_blue = np.array([30, 40, 90]) 
         upper_blue = np.array([80, 160, 255])
         
         # Red health bars
-        lower_red = np.array([100, 10, 35])
-        upper_red = np.array([255, 70, 90])
+        lower_red = np.array([70, 0, 0])
+        upper_red = np.array([255, 110, 130])
         
 
         # Create masks for Red and Blue colors
@@ -111,10 +111,10 @@ def categorize_teams(entities, image, debug=False):
         # Let's use the colors to determine the actual team
         if red_ratio > 0.1:
             team = 'enemy'
-        elif blue_ratio>red_ratio and blue_ratio > 0.1:
+        elif blue_ratio>red_ratio and blue_ratio > 0.5:
             team = 'friendly'
         else:
-            team = 'none'
+            team = 'enemy'
         if entity_id == 3 and debug:  # Only show for the first entity for debugging purposes
             height, width = bbox.shape[:2]
             aspect_ratio = width / height

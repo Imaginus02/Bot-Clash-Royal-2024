@@ -17,7 +17,7 @@ upper_blue = np.array([80, 160, 255])
 # Red health bars
 #lower_red = np.array([50, 0, 50])
 #upper_red = np.array([255, 90, 150])
-lower_red = np.array([100, 10, 35])
+lower_red = np.array([90, 0, 0])
 upper_red = np.array([255, 70, 90])
 
 # Load the enemy image
