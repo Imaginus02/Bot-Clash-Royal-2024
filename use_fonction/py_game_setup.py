@@ -102,13 +102,14 @@ class Screen_UI:
             for part_state in state[1:]:
                 i+=1
                 if part_state[0] > 1:
-                    if part_state in entities and analyze_teams:
-                        if teams[entities.index(part_state)][1] == "none":
-                            color = (0,255,0)
-                        elif teams[entities.index(part_state)][1] == "enemy":
-                            color = (255, 0, 0)
-                        elif teams[entities.index(part_state)][1] == "friendly":
-                            color = (0, 0, 255)
+                    if analyze_teams:
+                        if part_state in entities:
+                            if teams[entities.index(part_state)][1] == "none":
+                                color = (0,255,0)
+                            elif teams[entities.index(part_state)][1] == "enemy":
+                                color = (255, 0, 0)
+                            elif teams[entities.index(part_state)][1] == "friendly":
+                                color = (0, 0, 255)
                     else:
                         color = self.white
                     # Créer une surface avec canal alpha
