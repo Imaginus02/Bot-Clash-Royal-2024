@@ -363,10 +363,21 @@ class bot():
             
             if defender_index is not None:
                 # Place defender between enemy and tower
-                target_tower = min(our_towers, key=lambda t: ((t[1][0] - enemy_x) ** 2 + (t[1][1] - enemy_y) ** 2) ** 0.5)
+                # Coordonnées de la troisième tour
+                third_tower = [1, [225, 550], 'alive tower', [49, 65], 1]
+
+                # Ajouter la troisième tour temporairement à notre comparaison
+                towers_to_compare = our_towers + [third_tower]
+
+                # Trouver la tour la plus proche de l'ennemi
+                target_tower = min(towers_to_compare, key=lambda t: ((t[1][0] - enemy_x) ** 2 + (t[1][1] - enemy_y) ** 2) ** 0.5)
+
+                # Placer le défenseur entre la tour choisie et l'ennemi
                 defend_x = target_tower[1][0]
-                defend_y = target_tower[1][1]-30
+                defend_y = target_tower[1][1] - 30
+
                 #[78,458,54,65],[312,458,54,65]
+                #225,550
                 
                 self.last_card_played = cards[defender_index][1]
                 return [defender_index, [defend_x,defend_y]]
@@ -450,11 +461,13 @@ class bot():
         # Queue up a strong push
         #selects the weakest tower, excluding towers that where already destroyed
         if(enemy_towers[0][2]=='destroyed tower'):
-            target_tower = enemy_towers[1]
-            attack_x,attack_y = self.coord_attaque[1]
-        elif(enemy_towers[1][2]=='destroyed tower'):
             target_tower = enemy_towers[0]
-            attack_x,attack_y = self.coord_attaque[0]
+            attack_x = self.coord_attaque[1][0]
+            attack_y = 263 #nearest attack point when a tower is destroyed
+        elif(enemy_towers[1][2]=='destroyed tower'):
+            target_tower = enemy_towers[1]
+            attack_x = self.coord_attaque[1][0]
+            attack_y = 263 #nearest attack point when a tower is destroyed
         elif(enemy_towers[0][4]>enemy_towers[1][4]):
             target_tower = enemy_towers[0]
             attack_x,attack_y = self.coord_attaque[0]
@@ -535,11 +548,13 @@ class bot():
         if chip_candidates:
             # Target tower
             if(enemy_towers[0][2]=='destroyed tower'):
-                target_tower = enemy_towers[1]
-                attack_x,attack_y = self.coord_attaque[1]
-            elif(enemy_towers[1][2]=='destroyed tower'):
                 target_tower = enemy_towers[0]
-                attack_x,attack_y = self.coord_attaque[0]
+                attack_x = self.coord_attaque[1][0]
+                attack_y = 263 #nearest attack point when a tower is destroyed
+            elif(enemy_towers[1][2]=='destroyed tower'):
+                target_tower = enemy_towers[1]
+                attack_x = self.coord_attaque[1][0]
+                attack_y = 263 #nearest attack point when a tower is destroyed
             elif(enemy_towers[0][4]>enemy_towers[1][4]):
                 target_tower = enemy_towers[0]
                 attack_x,attack_y = self.coord_attaque[0]
