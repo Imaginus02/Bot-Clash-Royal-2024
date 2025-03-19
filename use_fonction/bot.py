@@ -74,51 +74,63 @@ def categorize_teams(entities, image, debug=False):
 
         # Extract the bounding box region from the image
         # Calculate the top-left corner of the bounding box from the center coordinates
-        bounding_offset = 20 #extends the bounding box to include the small red box on the ennemy
+        bounding_offset = 10 #extends the bounding box to include the small red box on the ennemy
         top_left_x = pos_x - (w // 2)
         top_left_y = pos_y - (h // 2)
 
         # Extract the bounding box region from the image
-        bbox = image[top_left_y-bounding_offset:top_left_y + h + bounding_offset, top_left_x:top_left_x + w]
+        bbox = image[top_left_y-bounding_offset:top_left_y +h, top_left_x:top_left_x + w]
 
         # Convert the bounding box to HSV color space for easier color detection
-        hsv_bbox = cv2.cvtColor(bbox, cv2.COLOR_BGR2HSV)
+        rgb_box = cv2.cvtColor(bbox, cv2.COLOR_BGR2RGB)
+        #rgb_box = bbox
 
-        # Define color ranges for gold/yellow and blue in HSV
-        # Gold/yellow health bars
-        lower_gold = np.array([13, 50, 70])  # Gold/yellow range (adjust as needed)
-        upper_gold = np.array([22, 200, 150])
-        
         # Blue health bars
-        lower_blue = np.array([90, 50, 50])  # Blue range (expanded to catch more blue tones)
-        upper_blue = np.array([140, 255, 255])
+        lower_blue = np.array([30, 100, 220]) 
+        upper_blue = np.array([80, 160, 255])
+        
+        # Red health bars
+        lower_red = np.array([130, 20, 45])
+        upper_red = np.array([255, 70, 90])
+        
 
-        # Create masks for gold and blue colors
-        gold_mask = cv2.inRange(hsv_bbox, lower_gold, upper_gold)
-        blue_mask = cv2.inRange(hsv_bbox, lower_blue, upper_blue)
+        # Create masks for Red and Blue colors
+        blue_mask = cv2.inRange(rgb_box, lower_blue, upper_blue)
+        red_mask = cv2.inRange(rgb_box, lower_red, upper_red)
 
-        # Count the number of gold and blue pixels in the bounding box
-        gold_pixels = cv2.countNonZero(gold_mask)
+        # Count the number of Red and Blue pixels in the bounding box
         blue_pixels = cv2.countNonZero(blue_mask)
+        red_pixels = cv2.countNonZero(red_mask)
 
-        # Calculate the proportion of gold and blue pixels relative to the bounding box size
+        # Calculate the proportion of Red and blue pixels relative to the bounding box size
         total_pixels = w * h
-        gold_ratio = gold_pixels / total_pixels
         blue_ratio = blue_pixels / total_pixels
+        red_ratio = red_pixels / total_pixels
 
         # Determine the team based on the dominant color
         # Let's use the colors to determine the actual team
-        if blue_ratio > gold_ratio and blue_ratio > 0.5:
+        if red_ratio > blue_ratio and red_ratio > 0.05:
             team = 'enemy'  # Enemy team (blue health bars)
-        elif gold_ratio > 0.01:  # Lower threshold to catch more gold
+        elif blue_ratio > red_ratio and blue_ratio > 0.05:  # Lower threshold to catch more gold
             team = 'friendly'  # Your team (gold health bars)
         else:
-            team = 'friendly'  # Default to friendly if no clear color is detected
+            team = 'none'  # Default to friendly if no clear color is detected
+        if entity_id == 3 and debug:  # Only show for the first entity for debugging purposes
+            height, width = bbox.shape[:2]
+            aspect_ratio = width / height
+            new_width = int(200 * aspect_ratio)
+            resized_blue_mask = cv2.resize(blue_mask, (new_width, 200))  # Resize the blue mask image while keeping the aspect ratio
+            resized_red_mask = cv2.resize(red_mask, (new_width, 200))  # Resize the red mask image while keeping the aspect ratio
 
+            # Combine the two images side by side
+            combined_mask = np.hstack((resized_blue_mask, resized_red_mask))
+
+            cv2.imshow("bbox" + team, combined_mask)
+            cv2.waitKey(100)
         # Debugging output
         #debug = 1
         if debug:
-            print(f"Entity {entity_id}: Gold pixels = {gold_pixels} ({gold_ratio:.2f}), Blue pixels = {blue_pixels} ({blue_ratio:.2f}), Team = {team}")
+            print(f"Entity {entity_id}: Gold pixels = {blue_ratio} ({blue_ratio:.2f}), Blue pixels = {red_pixels} ({red_ratio:.2f}), Team = {team}")
             
             # Draw bounding box
             debug_image = image.copy()
@@ -133,12 +145,12 @@ def categorize_teams(entities, image, debug=False):
             
             # Show images
             cv2.imshow(f"Entity {entity_id} - Detection", debug_image)
-            cv2.imshow(f"Entity {entity_id} - Gold Mask", gold_mask)
-            cv2.imshow(f"Entity {entity_id} - Blue Mask", blue_mask)
+            cv2.imshow(f"Entity {entity_id} - Gold Mask", blue_mask)
+            cv2.imshow(f"Entity {entity_id} - Blue Mask", red_mask)
             cv2.waitKey(500)  # Wait for 500ms instead of indefinitely
             cv2.destroyAllWindows()
 
-        categorized_entities.append((entity_id, team, round(blue_ratio,2), round(gold_ratio,2)))
+        categorized_entities.append((entity_id, team, round(red_ratio,2), round(blue_ratio,2)))
 
     return categorized_entities
 

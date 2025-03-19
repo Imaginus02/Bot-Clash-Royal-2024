@@ -104,7 +104,7 @@ class Screen_UI:
                 if part_state[0] > 1:
                     if part_state in entities and analyze_teams:
                         if teams[entities.index(part_state)][1] == "none":
-                            color = self.white
+                            color = (0,255,0)
                         elif teams[entities.index(part_state)][1] == "enemy":
                             color = (255, 0, 0)
                         elif teams[entities.index(part_state)][1] == "friendly":
@@ -116,7 +116,8 @@ class Screen_UI:
                     y_l = part_state[3][1]
                     x = 30 + part_state[1][0] - int(x_l/2)
                     y = 30 + part_state[1][1] - int(y_l/2)
-                    pygame.draw.rect(self.window, color, (x, y, x_l, y_l), 2)
+                    pygame.draw.rect(self.window, color, (x, y-10, x_l, y_l+10), 2)
+                    #pygame.draw.rect(self.window, color, (x-5, y-10, x_l+10, 15), 2)
                 if part_state in entities and analyze_teams:
                     text_part_state = self.font_state.render(str(part_state[1])+"  "+str(part_state[2])+" "+str(teams[entities.index(part_state)][2])+" "+str(teams[entities.index(part_state)][3]), True, (255, 255, 255))
                 else:
