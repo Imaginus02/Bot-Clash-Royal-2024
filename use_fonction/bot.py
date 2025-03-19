@@ -82,36 +82,38 @@ def categorize_teams(entities, image, debug=False):
         bbox = image[top_left_y-bounding_offset:top_left_y +h, top_left_x:top_left_x + w]
 
         # Convert the bounding box to HSV color space for easier color detection
-        rgb_box = cv2.cvtColor(bbox, cv2.COLOR_BGR2RGB)
-        #rgb_box = bbox
+        #rgb_box = cv2.cvtColor(bbox, cv2.COLOR_BGR2RGB)
+        rgb_box = bbox
 
-        # Blue health bars
-        lower_blue = np.array([30, 100, 220]) 
-        upper_blue = np.array([80, 160, 255])
+        # Blue
+        lower_blue = np.array([20, 80, 160]) 
+        upper_blue = np.array([100, 170, 255])
         
-        # Red health bars
-        lower_red = np.array([130, 20, 45])
-        upper_red = np.array([255, 70, 90])
+        # Red 
+        lower_red = np.array([120, 10, 35])
+        upper_red = np.array([255, 90, 100])
         
 
         # Create masks for Red and Blue colors
         blue_mask = cv2.inRange(rgb_box, lower_blue, upper_blue)
         red_mask = cv2.inRange(rgb_box, lower_red, upper_red)
-
+        green_space = np.full((blue_mask.shape[0], 10), 255, dtype=np.uint8)
+        mask_combined = cv2.hconcat([blue_mask, green_space, red_mask])
+        cv2.imshow("bbox", mask_combined)
         # Count the number of Red and Blue pixels in the bounding box
         blue_pixels = cv2.countNonZero(blue_mask)
         red_pixels = cv2.countNonZero(red_mask)
 
         # Calculate the proportion of Red and blue pixels relative to the bounding box size
-        total_pixels = w * h
-        blue_ratio = blue_pixels / total_pixels
-        red_ratio = red_pixels / total_pixels
+        
+        blue_ratio = blue_pixels / blue_mask.size
+        red_ratio = red_pixels / red_mask.size
 
         # Determine the team based on the dominant color
         # Let's use the colors to determine the actual team
-        if red_ratio > blue_ratio and red_ratio > 0.05:
+        if red_ratio > blue_ratio and red_pixels > 5:
             team = 'enemy'  # Enemy team (blue health bars)
-        elif blue_ratio > red_ratio and blue_ratio > 0.05:  # Lower threshold to catch more gold
+        elif blue_ratio > red_ratio and blue_pixels > 5:  # Lower threshold to catch more gold
             team = 'friendly'  # Your team (gold health bars)
         else:
             team = 'none'  # Default to friendly if no clear color is detected
