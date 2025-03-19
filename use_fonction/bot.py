@@ -410,7 +410,7 @@ class bot():
         elif "gargouilles" in enemy_type.lower():
             defenders_priority = ["gobelin_lance", "mousquetaire"]  
         elif "zappy" in enemy_type.lower():
-            defenders_priority = ["PK", "mousquetaire", "squelettes", "gobelin_lance"]  
+            defenders_priority = ["gargouilles","bat","PK", "mousquetaire", "squelettes", "gobelin_lance"]  
         elif "gobelin" in enemy_type.lower():
             defenders_priority = ["valkyrie", "chevalier", "squelettes"]  
         elif "gobelin_lance" in enemy_type.lower():
