@@ -25,13 +25,13 @@ import time
 
 
 prix_cartes = {
-    "squelette_vignette.jpg":3,
-    "gobelin_vignette.jpg":2,
-    "archere_vignette.jpg":3,
+    "squelette_vignette.jpg":1,
+    "gobelin_lance_vignette.jpg":2,
+    "mousquetaire_vignette.jpg":4,
     "chevalier_vignette.jpg":3,
-    "geant_vignette.jpg":5,
+    "gargouilles_vignette.jpg":3,
     "PK_vignette.jpg":4,
-    "buche_vignette.jpg":2,
+    "valkyrie_vignette.jpg":4,
     "bat_vignette.jpg":2
 }
 
@@ -408,7 +408,7 @@ class bot():
         elif "bat" in enemy_type.lower():
             defenders_priority = ["archere", "gobelin_lance", "mousquetaire"]  
         elif "gargouilles" in enemy_type.lower():
-            defenders_priority = ["archere", "gobelin_lance", "mousquetaire"]  
+            defenders_priority = ["gobelin_lance", "mousquetaire"]  
         elif "zappy" in enemy_type.lower():
             defenders_priority = ["PK", "mousquetaire", "squelettes", "gobelin_lance"]  
         elif "gobelin" in enemy_type.lower():
@@ -479,32 +479,32 @@ class bot():
         
         
         # Check for tank cards
-        if "geant_vignette.jpg" in card_types:
-            tank_index = card_types.index("geant_vignette.jpg")
+        if "PK_vignette.jpg" in card_types:
+            tank_index = card_types.index("PK_vignette.jpg")
             self.attack_queue.append([tank_index, [attack_x, attack_y]])
-            
+
             # Queue support troops
-            if "archere_vignette.jpg" in card_types:
-                support_index = card_types.index("archere_vignette.jpg")
+            if "mousquetaire_vignette.jpg" in card_types:
+                support_index = card_types.index("mousquetaire_vignette.jpg")
                 support_x = attack_x
                 support_y = attack_y + 30
                 self.attack_queue.append([support_index, [support_x, support_y]])
-            
+
             # Return the first action
             return self.attack_queue.pop(0)
-            
-        # If no tank, try a mini-tank
+
+        # If no tank, try a mini-tank (Chevalier)
         elif "chevalier_vignette.jpg" in card_types:
             tank_index = card_types.index("chevalier_vignette.jpg")
             self.attack_queue.append([tank_index, [attack_x, attack_y]])
-            
+
             # Queue support troops
-            if "gobelin_vignette.jpg" in card_types or "squelette_vignette.jpg" in card_types:
-                support_index = card_types.index("gobelin_vignette.jpg" if "gobelin_vignette.jpg" in card_types else "squelette_vignette.jpg")
+            if "gobelin_lance_vignette.jpg" in card_types or "squelette_vignette.jpg" in card_types:
+                support_index = card_types.index("gobelin_lance_vignette.jpg" if "gobelin_lance_vignette.jpg" in card_types else "squelette_vignette.jpg")
                 support_x = attack_x
                 support_y = attack_y + 30
                 self.attack_queue.append([support_index, [support_x, support_y]])
-            
+
             # Return the first action
             return self.attack_queue.pop(0)
         
@@ -519,7 +519,7 @@ class bot():
         # Find mid-cost cards for split pushing
         split_candidates = []
         for i, card_type in enumerate(card_types):
-            if card_type in ["chevalier_vignette.jpg", "archere_vignette.jpg", "gobelin_vignette.jpg"]:
+            if card_type in ["chevalier_vignette.jpg", "gargouilles_vignette.jpg", "gobelin_lance_vignette.jpg","squelettes_vignette.jpg"]:
                 split_candidates.append(i)
         
         if len(split_candidates) >= 2:
@@ -543,7 +543,7 @@ class bot():
         # Find cheap cards for chip damage
         chip_candidates = []
         for i, card_type in enumerate(card_types):
-            if card_type in ["gobelin_vignette.jpg", "squelette_vignette.jpg", "archere_vignette.jpg", "bat_vignette.jpg"]:
+            if card_type in ["gobelin_lance_vignette.jpg", "squelettes_vignette.jpg", "gargouilles_vignette.jpg", "bat_vignette.jpg"]:
                 chip_candidates.append(i)
         
         if chip_candidates:
