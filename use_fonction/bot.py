@@ -84,11 +84,10 @@ def categorize_teams(entities, image, debug=False):
         # Convert the bounding box to HSV color space for easier color detection
         #rgb_box = cv2.cvtColor(bbox, cv2.COLOR_BGR2RGB)
         rgb_box = bbox
-
         # Blue
         lower_blue = np.array([20, 80, 160]) 
         upper_blue = np.array([100, 170, 255])
-        
+
         # Red 
         lower_red = np.array([120, 10, 35])
         upper_red = np.array([255, 90, 100])
@@ -111,12 +110,12 @@ def categorize_teams(entities, image, debug=False):
 
         # Determine the team based on the dominant color
         # Let's use the colors to determine the actual team
-        if red_ratio > blue_ratio and red_pixels > 5:
+        if red_ratio > blue_ratio and red_ratio > 0.05:
             team = 'enemy'  # Enemy team (blue health bars)
-        elif blue_ratio > red_ratio and blue_pixels > 5:  # Lower threshold to catch more gold
+        elif blue_ratio > red_ratio and blue_ratio > 0.05:  # Lower threshold to catch more gold
             team = 'friendly'  # Your team (gold health bars)
         else:
-            team = 'none'  # Default to friendly if no clear color is detected
+            team = 'enemy'
         if entity_id == 3 and debug:  # Only show for the first entity for debugging purposes
             height, width = bbox.shape[:2]
             aspect_ratio = width / height
@@ -384,27 +383,35 @@ class bot():
         # Prioritize defenders based on enemy type
         defenders_priority = []
         
-        # Handle different enemy types with appropriate counters
+# Handle different enemy types with appropriate counters
         if "geant" in enemy_type.lower():
-            defenders_priority = ["PK", "squelette", "gobelin", "archere"]
-        elif "bat" in enemy_type.lower():
-            defenders_priority = ["archere", "squelette", "gobelin", "chevalier"]
-        elif "chevalier" in enemy_type.lower():
-            defenders_priority = ["squelette", "gobelin", "PK", "archere"]
-        elif "gobelin" in enemy_type.lower() or "squelette" in enemy_type.lower():
-            defenders_priority = ["buche", "chevalier", "archere"]
-        elif "zappy" in enemy_type.lower():
-            defenders_priority = ["bat", "PK", "chevalier", "archere"]
+            defenders_priority = ["PK", "mousquetaire", "chauvesouris", "gargouilles"]  
         elif "mousquetaire" in enemy_type.lower():
-            defenders_priority = ["squelette", "chevalier", "archere", "buche"]
+            defenders_priority = ["chevalier", "squelettes", "gargouilles", "chauvesouris"]  
         elif "valkyrie" in enemy_type.lower():
-            defenders_priority = ["bat", "chevalier", "PK", "archere"]
+            defenders_priority = ["mousquetaire", "PK", "gargouilles", "chauvesouris"]  
+        elif "chevalier" in enemy_type.lower():
+            defenders_priority = ["mousquetaire", "squelettes", "gobelin_lance", "gargouilles"]  
+        elif "PK" in enemy_type.lower():  # Mini P.E.K.K.A
+            defenders_priority = ["squelettes", "gobelin_lance", "chauvesouris", "gargouilles"]  
+        elif "bat" in enemy_type.lower():
+            defenders_priority = ["archere", "gobelin_lance", "mousquetaire"]  
+        elif "gargouilles" in enemy_type.lower():
+            defenders_priority = ["archere", "gobelin_lance", "mousquetaire"]  
+        elif "zappy" in enemy_type.lower():
+            defenders_priority = ["PK", "mousquetaire", "squelettes", "gobelin_lance"]  
+        elif "gobelin" in enemy_type.lower():
+            defenders_priority = ["valkyrie", "chevalier", "squelettes"]  
+        elif "gobelin_lance" in enemy_type.lower():
+            defenders_priority = ["valkyrie", "chevalier", "archere"]  
+        elif "archere" in enemy_type.lower():
+            defenders_priority = ["chevalier", "valkyrie", "gargouilles"]  
         elif "squelette" in enemy_type.lower():
-            defenders_priority = ["buche", "squelette", "gobelin", "archere"]
+            defenders_priority = ["valkyrie", "squelettes", "gobelin_lance"]  
         else:
-            # Default priority
-            defenders_priority = ["chevalier", "squelette", "gobelin", "archere", "PK", "buche"]
-        
+            # Priorité par défaut
+            defenders_priority = ["chevalier", "mousquetaire", "squelettes", "gobelin_lance", "PK"]
+
         # Find the first available defender from our priority list
         for defender in defenders_priority:
             if (defender+"_vignette.jpg") in card_indices:

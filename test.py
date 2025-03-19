@@ -9,7 +9,6 @@ def calculate_on_pixel_ratio(mask):
 
 
 # Blue health bars
-
 lower_blue = np.array([20, 80, 160]) 
 upper_blue = np.array([100, 170, 255])
 
@@ -20,6 +19,7 @@ upper_red = np.array([255, 90, 100])
 
 # Load the enemy image
 image_ennemy = cv2.imread('D:\\clash royale\\Bot-Clash-Royal-2024\\image_ennemy_2.png')
+
 
 # Convert the enemy image to HSV color space
 rgb_ennemy = cv2.cvtColor(image_ennemy, cv2.COLOR_BGR2RGB)
@@ -46,6 +46,7 @@ mask_combined_ennemy_bgr = cv2.cvtColor(mask_combined_ennemy, cv2.COLOR_GRAY2BGR
 mask_combined_ennemy_bgr[:, mask_blue_ennemy.shape[1]:mask_blue_ennemy.shape[1] + 10] = [0, 255, 0]  # Green color
 
 # Load the ally image
+
 image_ally = cv2.imread('D:\\clash royale\\Bot-Clash-Royal-2024\\image_ally_2.png')
 
 # Convert the ally image to HSV color space
