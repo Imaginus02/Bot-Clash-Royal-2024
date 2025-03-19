@@ -96,9 +96,9 @@ def categorize_teams(entities, image, debug=False):
         # Create masks for Red and Blue colors
         blue_mask = cv2.inRange(rgb_box, lower_blue, upper_blue)
         red_mask = cv2.inRange(rgb_box, lower_red, upper_red)
-        green_space = np.full((blue_mask.shape[0], 10), 255, dtype=np.uint8)
-        mask_combined = cv2.hconcat([blue_mask, green_space, red_mask])
-        cv2.imshow("bbox", mask_combined)
+        #green_space = np.full((blue_mask.shape[0], 10), 255, dtype=np.uint8)
+        #mask_combined = cv2.hconcat([blue_mask, green_space, red_mask])
+        #cv2.imshow("bbox", mask_combined)
         # Count the number of Red and Blue pixels in the bounding box
         blue_pixels = cv2.countNonZero(blue_mask)
         red_pixels = cv2.countNonZero(red_mask)
@@ -271,7 +271,7 @@ class bot():
         if self.should_defend(enemy_entities, our_towers) and not self.defense_mode:
             #print("defense")
             self.defense_mode = True
-            self.defense_timer = time.time() + 2.5  # Stay in defense mode for ~2.5 seconds
+            self.defense_timer = time.time() + 5  # Stay in defense mode for ~2.5 seconds
             self.last_defense_time = time.time()
         
         # Check if we can exit defense mode
